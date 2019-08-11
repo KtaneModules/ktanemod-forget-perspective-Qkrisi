@@ -912,6 +912,13 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					if(!(finalstring[p]  == 'A' || finalstring[p] == 'E' || finalstring[p] == 'I' || finalstring[p] == 'O' || finalstring[p] == 'U') && !(finalstring[target2]  == 'A' || finalstring[target2] == 'E' || finalstring[target2] == 'I' || finalstring[target2] == 'O' || finalstring[target2] == 'U') && !(finalstring[target3]  == 'A' || finalstring[target3] == 'E' || finalstring[target3] == 'I' || finalstring[target3] == 'O' || finalstring[target3] == 'U')){
 						arethere2 = true;
 					}
+					int tempconsnum = 0;
+					for(int k=0;k<finalstring.Length;k++){
+							if(!(finalstring[k]  == 'A' || finalstring[k] == 'E' || finalstring[k] == 'I' || finalstring[k] == 'O' || finalstring[k] == 'U')){
+								tempconsnum++;
+							}
+						}
+					if(tempconsnum==5){arethere2=false;}
 				}
 				if(arethere2){
 					//Debug.LogFormat("Answer 3!");
