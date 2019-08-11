@@ -275,17 +275,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+    - target: {fileID: 114902792583946208, guid: 9f4c6d7187b6e494a8869db11cac6bb0,
+        type: 2}
+      propertyPath: TwitchHelpMessage
+      value: Use '!{0} submit <input>' to submit an answer! (Don't use spaced between
+        the input characters!) Use '!{0} rotate' to rotate the cube!
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}

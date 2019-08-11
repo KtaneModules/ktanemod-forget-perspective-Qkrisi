@@ -59,6 +59,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private Material Magenta;
 	private Material White;
 
+	bool TimeModeActive;
+
 	static int moduleIdCounter;
 	int moduleId;
 
@@ -355,6 +357,10 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				return;
 		}
 		StageText.GetComponent<TextMesh>().text=stageNumber.ToString();
+		if(TimeModeActive){
+		int zero = 0;
+		TimerText.GetComponent<TextMesh>().text=time.ToString();
+		if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}}
 		Debug.LogFormat("[Forget Perspective #{0}] ------Stage {1} ------", moduleId,stageNumber.ToString());
 		TempColors=AvailableColors;
 		for(int i = 0;i<5;i++){
@@ -362,7 +368,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			//foreach(string curr in CurrentStage){
 				//Debug.LogFormat(curr);
 			//}
-			Debug.LogFormat("[Forget Perspective #{0}]" +CurrentStage.Count.ToString(), moduleId);
+			//Debug.LogFormat("[Forget Perspective #{0}]" +CurrentStage.Count.ToString(), moduleId);
 			TempColors.RemoveAll(item => item == CurrentStage[i]);
 		}
 		CurrentStage.Add(TempColors[0]);
@@ -862,7 +868,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			while(!(final>0 && final<27)){
 			if(final<1){final=26-(final*-1);}
 			if(final>26){final=final-26;}}
-			Debug.LogFormat("[Forget Perspective #{0} Shifted: {1} => {2}", moduleId, finalorder[i], letters[final-1]);
+			Debug.LogFormat("[Forget Perspective #{0}] Shifted: {1} => {2}", moduleId, finalorder[i], letters[final-1]);
 			//lowlist[lowlist.FindIndex(ind=>ind.Equals("Red"))] =  "R";
 			//finalorder[finalorder.FindIndex(ind=>ind.Equals(i))]=letters[final-1];
 			finalorder[i]=letters[final-1];
@@ -871,7 +877,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		foreach(string i in finalorder){
 			finalstring = finalstring + i;
 		}
-		Debug.LogFormat("Shifted order: {0} {1} {2} {3} {4} {5}", finalstring[0].ToString(), finalstring[1].ToString(), finalstring[2].ToString(), finalstring[3].ToString(), finalstring[4].ToString(), finalstring[5].ToString());
+		Debug.LogFormat("[Forget Perspective #{0}] Shifted order: {1} {2} {3} {4} {5} {6}", moduleId, finalstring[0].ToString(), finalstring[1].ToString(), finalstring[2].ToString(), finalstring[3].ToString(), finalstring[4].ToString(), finalstring[5].ToString());
 		int vowels =0;
 		for (int i = 0; i < finalstring.Length; i++)
     	{
@@ -1239,7 +1245,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		yield break;
     }
 
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaced between the input characters!)";
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaced between the input characters!) Use '!{0} rotate' to rotate the cube!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
