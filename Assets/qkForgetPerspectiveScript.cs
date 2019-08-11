@@ -348,6 +348,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				Faces[3].GetComponent<Renderer>().material=White;
 				Faces[4].GetComponent<Renderer>().material=White;
 				StageText.GetComponent<TextMesh>().text="Input";
+				TimerText.GetComponent<TextMesh>().text="";
 				string ansstring = "";
 				foreach(string pt in Answer){
 					ansstring = ansstring + pt;
