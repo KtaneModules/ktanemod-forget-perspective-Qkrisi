@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4103912386
+CRC: 3144033139
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: afbee064dc2ef6eab5abbff0e00d9cd3
+    Hash: cd723ac0f80b7ca4fc289b14b048253a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 3704238e8ffc50a0ff8027d9620f0f67
+    Hash: 3f9a679c617add0b4b990f6fe3c297d8
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -52,8 +52,6 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -548183353, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
 - Class: 114
-  Script: {fileID: -434690030, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
-- Class: 114
   Script: {fileID: 1702003387, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
 - Class: 114
   Script: {fileID: -381104716, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
@@ -66,7 +64,6 @@ ClassTypes:
 Assets:
 - Assets/qkForgetPerspective.prefab
 - Assets/Missions/oneStageTest.asset
-- Assets/Missions/TableOfContents.asset
 - Assets/Missions/modTest.asset
 - Assets/booleanWires.prefab
 Dependencies: []
