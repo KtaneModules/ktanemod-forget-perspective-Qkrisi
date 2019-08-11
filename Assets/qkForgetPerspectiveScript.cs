@@ -803,7 +803,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				break;
 			}
 			string ordertostring = "";
-			for(int i = 0;i<5;i++){ordertostring=ordertostring+" "+finalorder[i];}
+			for(int i = 0;i<6;i++){ordertostring=ordertostring+" "+finalorder[i];}
 			Debug.LogFormat("[Forget Perspective #{0}] Order made:{1}", moduleId, ordertostring);
 			//Debug.LogFormat("List length: {0}", finalorder.Count.ToString());
 		x=letters.FindIndex(ind=>ind.Equals(Bomb.GetSerialNumberLetters().Last().ToString().ToUpper()))+1;
@@ -1107,6 +1107,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 
 	 void Start (){
+		 Debug.LogFormat("[Forget Perspective #{0}] Started module", moduleId);
 		 CheckAutoSolve();
 	 }
 	
