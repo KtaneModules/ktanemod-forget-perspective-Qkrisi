@@ -919,14 +919,15 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					if(!(finalstring[p]  == 'A' || finalstring[p] == 'E' || finalstring[p] == 'I' || finalstring[p] == 'O' || finalstring[p] == 'U') && !(finalstring[target2]  == 'A' || finalstring[target2] == 'E' || finalstring[target2] == 'I' || finalstring[target2] == 'O' || finalstring[target2] == 'U') && !(finalstring[target3]  == 'A' || finalstring[target3] == 'E' || finalstring[target3] == 'I' || finalstring[target3] == 'O' || finalstring[target3] == 'U')){
 						arethere2 = true;
 					}
-					int tempconsnum = 0;
+					
+				}
+				int tempconsnum = 0;
 					for(int k=0;k<finalstring.Length;k++){
 							if(!(finalstring[k]  == 'A' || finalstring[k] == 'E' || finalstring[k] == 'I' || finalstring[k] == 'O' || finalstring[k] == 'U')){
 								tempconsnum++;
 							}
 						}
 					if(tempconsnum==5){arethere2=false;}
-				}
 				if(arethere2){
 					//Debug.LogFormat("Answer 3!");
 					Answer.Add(finalstring[3].ToString());
@@ -1275,6 +1276,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}*/
 		
 			string commandl=command.ToUpper();
+			if(commandl.Contains("PRESS ") || commandl.Contains("SUBMIT ")){
 			commandl=commandl.Replace("PRESS ", "");
 			commandl=commandl.Replace("SUBMIT ", "");
 			for(int i=0;i<commandl.Length;i++){
@@ -1289,6 +1291,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					yield return "sendtochaterror Invalid character. You've entered " + lastinputnumber + " characters so far.";
 					yield break;
 				}
+			}
 			}
 			yield break;
 	}
