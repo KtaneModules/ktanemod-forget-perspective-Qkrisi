@@ -927,7 +927,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 								tempconsnum++;
 							}
 						}
-					if(tempconsnum==5){arethere2=false;}
+					if(tempconsnum==6){arethere2=false;}
 				if(arethere2){
 					//Debug.LogFormat("Answer 3!");
 					Answer.Add(finalstring[3].ToString());
@@ -939,7 +939,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 								consnum++;
 							}
 						}
-						if(consnum==5){
+						if(consnum==6){
 							//Debug.LogFormat("Answer 4!");
 							Answer.Add(finalstring[4].ToString());
 						}
