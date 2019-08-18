@@ -209,7 +209,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 51
+  controlID: 76
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -404,18 +404,18 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Editor/Resources
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Editor/Resources
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /home/qkrisi/Desktop/GitHub Cloned/Forget Perspective
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: d8280000
-    m_LastClickedID: 10456
+    m_SelectedIDs: e82d0000
+    m_LastClickedID: 11752
     m_ExpandedIDs: 00000000d8280000d62a0000702c000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
