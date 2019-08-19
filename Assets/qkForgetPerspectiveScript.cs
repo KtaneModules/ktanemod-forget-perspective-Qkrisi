@@ -29,7 +29,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private int currentInputNumber = 1;
 	private int prevnum = 0;
 	private int stages;
-	public List<string> Ignoreds;
+	public string[] Ignoreds;
 	private bool solved = false;
 	private bool readytosolve = false;
 	public List<string> AvailableColors;
@@ -1110,6 +1110,24 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 	 void Start (){
 		 Debug.LogFormat("[Forget Perspective #{0}] Started module", moduleId);
+		 Ignoreds = GetComponent<KMBossModule>().GetIgnoredModules("Forget Perspective", new string[]{
+                "Forget Perspective",
+				"Forget Me Not",
+				"Forget Everything",
+				"Forget This",
+				"Forget Them All",
+				"Forget Infinity",
+				"Forget Us Not",
+				"The Stopwatch",
+				"Timing is Everything",
+				"Purgatory",
+				"Tallordered Keys",
+				"Simon's Stages",
+				"Forget Enigma",
+				"Souvenir",
+				"Turn The Key",
+				"Organization"
+            });
 		 CheckAutoSolve();
 	 }
 	

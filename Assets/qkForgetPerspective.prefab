@@ -9350,23 +9350,7 @@ MonoBehaviour:
   indexes: 
   Answer: []
   letters: []
-  Ignoreds:
-  - Forget Perspective
-  - Forget Me Not
-  - Forget Everything
-  - Forget This
-  - Forget Them All
-  - Forget Infinity
-  - Forget Us Not
-  - The Stopwatch
-  - Timing is Everything
-  - Purgatory
-  - Tallordered Keys
-  - Simon's Stages
-  - Forget Enigma
-  - Souvenir
-  - Turn The Key
-  - Organization
+  Ignoreds: []
   AvailableColors: []
   TempColors: []
   finalorder: []
