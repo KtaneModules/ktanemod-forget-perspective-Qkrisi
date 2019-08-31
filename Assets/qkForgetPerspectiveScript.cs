@@ -1126,7 +1126,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				"Forget Enigma",
 				"Souvenir",
 				"Turn The Key",
-				"Organization"
+				"Organization",
+			 	"The Time Keeper"
             });
 		 CheckAutoSolve();
 	 }
