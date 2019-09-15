@@ -9355,8 +9355,9 @@ MonoBehaviour:
   TempColors: []
   finalorder: []
   lowlist: []
-  TwitchHelpMessage: Use '!{0} submit <input>' to submit an answer! (Don't use spaces
-    between the input characters!) Use '!{0} rotate' to rotate the cube!
+  TwitchHelpMessage: 'Use ''!{0} submit <input>'' to submit an answer! (Don''t use
+    spaces between the input characters!) Use ''!{0} rotate'' to rotate the cube!
+    Use ''!{0} setspeed #'' to set the speed of rotation in seconds!'
 --- !u!114 &114903636704935182
 MonoBehaviour:
   m_ObjectHideFlags: 1

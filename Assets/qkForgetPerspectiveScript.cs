@@ -59,7 +59,10 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private Material Magenta;
 	private Material White;
 
+	private int rotationTime = 6;
+
 	bool TimeModeActive;
+	bool TwitchPlaysActive;
 
 	static int moduleIdCounter;
 	int moduleId;
@@ -358,7 +361,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				return;
 		}
 		StageText.GetComponent<TextMesh>().text=stageNumber.ToString();
-		if(TimeModeActive){
+		if(TimeModeActive || TwitchPlaysActive){
 		int zero = 0;
 		TimerText.GetComponent<TextMesh>().text=time.ToString();
 		if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}}
@@ -1267,7 +1270,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		yield break;
     }
 
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaces between the input characters!) Use '!{0} rotate' to rotate the cube!";
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaces between the input characters!) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
@@ -1275,10 +1278,29 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			else{
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
 			}
-			StartCoroutine(RotateModule(6));
+			StartCoroutine(RotateModule(rotationTime));
 			yield return new WaitForSeconds(7.1f);
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
+		}
+		string commandl=command.ToUpper();
+		if(commandl.Contains("SETSPEED ")){
+			commandl=commandl.Replace("SETSPEED ", "");
+			int temprot;
+			if(int.TryParse(commandl, out temprot)){
+				rotationTime=int.Parse(commandl);
+				if(rotationTime==69){
+					yield return "sendtochat Rotation set to 69 seconds! Kappa";
+				}
+				else{
+					yield return "sendtochat Rotation set to " + rotationTime + " seconds!";
+				}
+				yield break;
+			}
+			else{
+				yield return "sendtochaterror Digit not valid!";
+				yield break;
+			}
 		}
 		/* if(command.Equals("toggleautorotate", StringComparison.InvariantCultureIgnoreCase)){
 			autorotate=!autorotate;
@@ -1294,7 +1316,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 		}*/
 		
-			string commandl=command.ToUpper();
+			
 			if(commandl.Contains("PRESS ") || commandl.Contains("SUBMIT ")){
 			commandl=commandl.Replace("PRESS ", "");
 			commandl=commandl.Replace("SUBMIT ", "");
