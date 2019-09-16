@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KModkit;
@@ -1279,7 +1279,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
 			}
 			StartCoroutine(RotateModule(rotationTime));
-			yield return new WaitForSeconds(7.1f);
+			yield return new WaitForSeconds(((float)rotationTime)+1.1f);
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
 		}
@@ -1339,5 +1339,4 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 			yield break;
 	}
-	
 }
