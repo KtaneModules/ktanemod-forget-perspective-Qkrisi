@@ -84,12 +84,12 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		AvailableColors.Add("Magenta");
 		AvailableColors.Add("Orange");
 		letters.Clear();
-        letters.Add("A");
-        letters.Add("B");
-        letters.Add("C");
-        letters.Add("D");
-        letters.Add("E");
-        letters.Add("F");
+        	letters.Add("A");
+        	letters.Add("B");
+        	letters.Add("C");
+        	letters.Add("D");
+        	letters.Add("E");
+        	letters.Add("F");
 		letters.Add("G");
 		letters.Add("H");
 		letters.Add("I");
@@ -852,7 +852,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					}
 					break;
 				case 8:
-					final=basenum+x+y-Bomb.GetIndicators().Count()-Bomb.GetBatteryCount(Battery.D);
+					final=basenum+x+y-Bomb.GetIndicators().Count()+Bomb.GetBatteryCount(Battery.D);
 					break;
 				case 9:
 					if(Bomb.GetBatteryCount()>3){
