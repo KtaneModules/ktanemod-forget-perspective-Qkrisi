@@ -84,12 +84,12 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		AvailableColors.Add("Magenta");
 		AvailableColors.Add("Orange");
 		letters.Clear();
-        	letters.Add("A");
-        	letters.Add("B");
-        	letters.Add("C");
-        	letters.Add("D");
-        	letters.Add("E");
-        	letters.Add("F");
+        letters.Add("A");
+        letters.Add("B");
+        letters.Add("C");
+        letters.Add("D");
+        letters.Add("E");
+        letters.Add("F");
 		letters.Add("G");
 		letters.Add("H");
 		letters.Add("I");
@@ -631,7 +631,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					case 5:
 						finalorder.Add(lowlist[4]);
 						finalorder.Add(lowlist[2]);
-						finalorder.Add(lowlist[4]);
+						finalorder.Add(lowlist[3]);
 						finalorder.Add(lowlist[1]);
 						finalorder.Add(lowlist[0]);
 						finalorder.Add(lowlist[5]);
@@ -1318,8 +1318,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		
 			
 			if(commandl.Contains("PRESS ") || commandl.Contains("SUBMIT ")){
-			commandl=commandl.Replace("PRESS ", "");
-			commandl=commandl.Replace("SUBMIT ", "");
+			commandl=commandl.Replace("PRESS", "").Replace("SUBMIT","").Replace(" ","");
 			for(int i=0;i<commandl.Length;i++){
 				//Debug.LogFormat(commandl[i]);
 				//Debug.LogFormat(letters.FindIndex(ind=>ind.Equals(commandl[i])).ToString());
