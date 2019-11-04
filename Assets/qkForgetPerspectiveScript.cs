@@ -1112,7 +1112,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 
 	 void Start (){
-		 Debug.LogFormat("[Forget Perspective #{0}] Started module", moduleId);
 		 Ignoreds = GetComponent<KMBossModule>().GetIgnoredModules("Forget Perspective", new string[]{
                 "Forget Perspective",
 				"Forget Me Not",
@@ -1270,7 +1269,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		yield break;
     }
 
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaces between the input characters!) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds!";
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (You can use spaces to separate characters if you want) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
