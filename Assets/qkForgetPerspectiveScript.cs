@@ -1322,10 +1322,16 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				//Debug.LogFormat(commandl[i]);
 				//Debug.LogFormat(letters.FindIndex(ind=>ind.Equals(commandl[i])).ToString());
 				if(letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))>-1){
-					if((Answer[currentInputNumber-1])==commandl[i].ToString()){Buttons[letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))].OnInteract();}
-					else{
-					Buttons[letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))].OnInteract();
-					yield break;}
+                    if ((Answer[currentInputNumber - 1]) == commandl[i].ToString())
+                    {
+                        Buttons[letters.FindIndex(ind => ind.Equals(commandl[i].ToString()))].OnInteract();
+                        yield return new WaitForSeconds(.25f);
+                    }
+                    else
+                    {
+                        Buttons[letters.FindIndex(ind => ind.Equals(commandl[i].ToString()))].OnInteract();
+                        yield break;
+                    }
 				}
 				else{
 					int lastinputnumber = currentInputNumber-1;
