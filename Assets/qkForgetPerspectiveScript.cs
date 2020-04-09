@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KModkit;
@@ -59,7 +59,10 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private Material Magenta;
 	private Material White;
 
+	private int rotationTime = 6;
+
 	bool TimeModeActive;
+	bool TwitchPlaysActive;
 
 	static int moduleIdCounter;
 	int moduleId;
@@ -358,7 +361,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				return;
 		}
 		StageText.GetComponent<TextMesh>().text=stageNumber.ToString();
-		if(TimeModeActive){
+		if(TimeModeActive || TwitchPlaysActive){
 		int zero = 0;
 		TimerText.GetComponent<TextMesh>().text=time.ToString();
 		if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}}
@@ -628,7 +631,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					case 5:
 						finalorder.Add(lowlist[4]);
 						finalorder.Add(lowlist[2]);
-						finalorder.Add(lowlist[4]);
+						finalorder.Add(lowlist[3]);
 						finalorder.Add(lowlist[1]);
 						finalorder.Add(lowlist[0]);
 						finalorder.Add(lowlist[5]);
@@ -849,7 +852,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 					}
 					break;
 				case 8:
-					final=basenum+x+y-Bomb.GetIndicators().Count()-Bomb.GetBatteryCount(Battery.D);
+					final=basenum+x+y-Bomb.GetIndicators().Count()+Bomb.GetBatteryCount(Battery.D);
 					break;
 				case 9:
 					if(Bomb.GetBatteryCount()>3){
@@ -1109,7 +1112,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 
 	 void Start (){
-		 Debug.LogFormat("[Forget Perspective #{0}] Started module", moduleId);
 		 Ignoreds = GetComponent<KMBossModule>().GetIgnoredModules("Forget Perspective", new string[]{
                 "Forget Perspective",
 				"Forget Me Not",
@@ -1126,7 +1128,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				"Forget Enigma",
 				"Souvenir",
 				"Turn The Key",
-				"Organization"
+				"Organization",
+			 	"The Time Keeper"
             });
 		 CheckAutoSolve();
 	 }
@@ -1266,7 +1269,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		yield break;
     }
 
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (Don't use spaces between the input characters!) Use '!{0} rotate' to rotate the cube!";
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (You can use spaces to separate characters if you want) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
@@ -1274,10 +1277,29 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			else{
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
 			}
-			StartCoroutine(RotateModule(6));
-			yield return new WaitForSeconds(7.1f);
+			StartCoroutine(RotateModule(rotationTime));
+			yield return new WaitForSeconds(((float)rotationTime)+1.1f);
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
+		}
+		string commandl=command.ToUpper();
+		if(commandl.Contains("SETSPEED ")){
+			commandl=commandl.Replace("SETSPEED ", "");
+			int temprot;
+			if(int.TryParse(commandl, out temprot)){
+				rotationTime=int.Parse(commandl);
+				if(rotationTime==69){
+					yield return "sendtochat Rotation set to 69 seconds! Kappa";
+				}
+				else{
+					yield return "sendtochat Rotation set to " + rotationTime + " seconds!";
+				}
+				yield break;
+			}
+			else{
+				yield return "sendtochaterror Digit not valid!";
+				yield break;
+			}
 		}
 		/* if(command.Equals("toggleautorotate", StringComparison.InvariantCultureIgnoreCase)){
 			autorotate=!autorotate;
@@ -1293,18 +1315,23 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 		}*/
 		
-			string commandl=command.ToUpper();
+			
 			if(commandl.Contains("PRESS ") || commandl.Contains("SUBMIT ")){
-			commandl=commandl.Replace("PRESS ", "");
-			commandl=commandl.Replace("SUBMIT ", "");
+			commandl=commandl.Replace("PRESS", "").Replace("SUBMIT","").Replace(" ","");
 			for(int i=0;i<commandl.Length;i++){
 				//Debug.LogFormat(commandl[i]);
 				//Debug.LogFormat(letters.FindIndex(ind=>ind.Equals(commandl[i])).ToString());
 				if(letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))>-1){
-					if((Answer[currentInputNumber-1])==commandl[i].ToString()){Buttons[letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))].OnInteract();}
-					else{
-					Buttons[letters.FindIndex(ind=>ind.Equals(commandl[i].ToString()))].OnInteract();
-					yield break;}
+                    if ((Answer[currentInputNumber - 1]) == commandl[i].ToString())
+                    {
+                        Buttons[letters.FindIndex(ind => ind.Equals(commandl[i].ToString()))].OnInteract();
+                        yield return new WaitForSeconds(.25f);
+                    }
+                    else
+                    {
+                        Buttons[letters.FindIndex(ind => ind.Equals(commandl[i].ToString()))].OnInteract();
+                        yield break;
+                    }
 				}
 				else{
 					int lastinputnumber = currentInputNumber-1;
@@ -1316,5 +1343,4 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 			yield break;
 	}
-	
 }
