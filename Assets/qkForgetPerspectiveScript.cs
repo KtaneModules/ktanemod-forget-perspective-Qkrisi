@@ -32,6 +32,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	public string[] Ignoreds;
 	private bool solved = false;
 	private bool readytosolve = false;
+    private bool activated = false;
 	public List<string> AvailableColors;
 	public List<string> TempColors;
 	private float OriginalTime;
@@ -59,7 +60,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private Material Magenta;
 	private Material White;
 
-	private int rotationTime = 6;
+	private float rotationTime = 5;
 
 	bool TimeModeActive;
 	bool TwitchPlaysActive;
@@ -276,6 +277,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			return false;
 		};
 
+        GetComponent<KMBombModule>().OnActivate += OnActivate;
+
 		//Debug.LogFormat("Got a new module: {0}", Bomb.GetModuleNames()[0]);
 
 		/*List<string> tempmodules = Bomb.GetModuleNames();
@@ -338,7 +341,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	void generateNew(int time){
 		//Debug.LogFormat("Generate started");
 		if(!solved){
-		CurrentStage.Clear();
+        CurrentStage.Clear();
 		TimerText.GetComponent<TextMesh>().text="";
 		//Debug.LogFormat("Got there");
 		stageNumber++;
@@ -350,7 +353,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				Faces[2].GetComponent<Renderer>().material=White;
 				Faces[3].GetComponent<Renderer>().material=White;
 				Faces[4].GetComponent<Renderer>().material=White;
-				StageText.GetComponent<TextMesh>().text="Input";
+				StageText.GetComponent<TextMesh>().text="INPUT";
 				TimerText.GetComponent<TextMesh>().text="";
 				string ansstring = "";
 				foreach(string pt in Answer){
@@ -1019,23 +1022,27 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		if(readytosolve){
 			if(!solved){
 			if(Answer[currentInputNumber-1]==letter){
-				if(InputText.GetComponent<TextMesh>().text.Length==6){InputText.GetComponent<TextMesh>().text="";}
+				if(InputText.GetComponent<TextMesh>().text.Length==8){/**InputText.GetComponent<TextMesh>().text="";*/ InputText.GetComponent<TextMesh>().text = InputText.GetComponent<TextMesh>().text.Substring(1); }
 				InputText.GetComponent<TextMesh>().text=InputText.GetComponent<TextMesh>().text+letter;
 				Debug.LogFormat("[Forget Perspective #{0}] Which was correct!", moduleId);
 				currentInputNumber++;
-				if(currentInputNumber>stages){
+                Faces[0].GetComponent<Renderer>().material = White;
+                Faces[1].GetComponent<Renderer>().material = White;
+                Faces[2].GetComponent<Renderer>().material = White;
+                Faces[3].GetComponent<Renderer>().material = White;
+                Faces[4].GetComponent<Renderer>().material = White;
+                TimerText.GetComponent<TextMesh>().text = "";
+                if (currentInputNumber>stages){
 					solved=true;
-					Faces[0].GetComponent<Renderer>().material=White;
-					Faces[1].GetComponent<Renderer>().material=White;
-					Faces[2].GetComponent<Renderer>().material=White;
-					Faces[3].GetComponent<Renderer>().material=White;
-					Faces[4].GetComponent<Renderer>().material=White;
-					TimerText.GetComponent<TextMesh>().text="";
 					StageText.GetComponent<TextMesh>().text="GG :D";
 					InputText.GetComponent<TextMesh>().text="Module solved!";
 					Debug.LogFormat("[Forget Perspective #{0}] Module solved!", moduleId);
 					GetComponent<KMBombModule>().HandlePass();
-				}
+                }
+                else
+                {
+                    StageText.GetComponent<TextMesh>().text = "INPUT";
+                }
 		}
 		else{
 			Debug.LogFormat("[Forget Perspective #{0}] Which wasn't correct. Strike!", moduleId);
@@ -1104,7 +1111,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
  	}*/
 
 	 private IEnumerator AutoSolve(){
-		 yield return new WaitForSeconds(2f);
+		 yield return new WaitForSeconds(0.01f);
 		 Debug.LogFormat("[Forget Perspective #{0}] There are no modules that is not ignored by Forget Perspective. Auto-solving module.", moduleId);
 		 GetComponent<KMBombModule>().HandlePass();
 		 yield break;
@@ -1131,7 +1138,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				"Organization",
 			 	"The Time Keeper"
             });
-		 CheckAutoSolve();
+		 //CheckAutoSolve();
 	 }
 	
 	void CheckAutoSolve(){
@@ -1153,8 +1160,14 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}
 	}
 
+    void OnActivate()
+    {
+        CheckAutoSolve();
+        activated = true;
+    }
+
 	 void Update (){
-		 if(solved){return;}
+		 if(solved || !activated){return;}
 		ticker++;
 		if(ticker == 5)
 		{
@@ -1170,12 +1183,11 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			foreach (String d in Ignoreds) { newSolves.Remove(d); }
 			foreach (String d in solvedModules) { newSolves.Remove(d); }
 
-			if(newSolves.Count() == 0)
-				return;
+            if (newSolves.Count() == 0)
+                return;
 
-			lastCalcStage++;
-			solvedModules.Add(newSolves[0]);
-		}
+            foreach (String d in newSolves) { solvedModules.Add(d); lastCalcStage++; }
+        }
 		if(lastCalcStage >= stageNumber)
 		{
 			Reset();
@@ -1187,7 +1199,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
         return rate * (Time.deltaTime / targetTime);
     }
 
-	IEnumerator RotateModule(int duration)
+	IEnumerator RotateModule(float duration)
     {
 			int angle = 20;
 			//Module.transform.localEulerAngles = new Vector3(0, 0, 0);
@@ -1277,23 +1289,30 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			else{
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
 			}
-			StartCoroutine(RotateModule(rotationTime));
-			yield return new WaitForSeconds(((float)rotationTime)+1.1f);
+            while (Cube.transform.localEulerAngles != new Vector3(0, 180, 0)) { yield return "trycancel"; }
+            StartCoroutine(RotateModule(rotationTime));
+            yield return new WaitForSeconds(0.01f);
+			while (Cube.transform.localEulerAngles != new Vector3(0, 180, 0)) { yield return "trycancel"; }
 			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
 		}
 		string commandl=command.ToUpper();
 		if(commandl.Contains("SETSPEED ")){
 			commandl=commandl.Replace("SETSPEED ", "");
-			int temprot;
-			if(int.TryParse(commandl, out temprot)){
-				rotationTime=int.Parse(commandl);
-				if(rotationTime==69){
+			float temprot;
+			if(float.TryParse(commandl, out temprot)){
+				rotationTime=temprot;
+                if(rotationTime > 10f)
+                {
+                    yield return "sendtochaterror The rotation time may not be set higher than 10 seconds!";
+                    yield break;
+                }
+				/**if(rotationTime==69f){
 					yield return "sendtochat Rotation set to 69 seconds! Kappa";
 				}
-				else{
+				else{*/
 					yield return "sendtochat Rotation set to " + rotationTime + " seconds!";
-				}
+				//}
 				yield break;
 			}
 			else{
@@ -1325,7 +1344,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
                     if ((Answer[currentInputNumber - 1]) == commandl[i].ToString())
                     {
                         Buttons[letters.FindIndex(ind => ind.Equals(commandl[i].ToString()))].OnInteract();
-                        yield return new WaitForSeconds(.25f);
+                        yield return new WaitForSeconds(.1f);
                     }
                     else
                     {
@@ -1343,4 +1362,18 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 			yield break;
 	}
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (!readytosolve)
+        {
+            yield return true;
+        }
+        string ans = "";
+        for (int i = 0; i < Answer.Count(); i++)
+        {
+            ans += Answer[i];
+        }
+        yield return ProcessTwitchCommand("submit "+ans);
+    }
 }
