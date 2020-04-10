@@ -1287,13 +1287,12 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
 			if(Module.transform.localEulerAngles.z==0){yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(75,0,0)};}
 			else{
-			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
+			    yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
 			}
-            while (Cube.transform.localEulerAngles != new Vector3(0, 180, 0)) { yield return "trycancel"; }
+            while (Module.transform.localEulerAngles != new Vector3(0, 0, Module.transform.localEulerAngles.z)) { yield return "trycancel"; }
             StartCoroutine(RotateModule(rotationTime));
-            yield return new WaitForSeconds(0.01f);
-			while (Cube.transform.localEulerAngles != new Vector3(0, 180, 0)) { yield return "trycancel"; }
-			yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
+            while (Module.transform.localEulerAngles != new Vector3(0, 0, Module.transform.localEulerAngles.z)) { yield return "trycancel"; }
+            yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
 		}
 		string commandl=command.ToUpper();
