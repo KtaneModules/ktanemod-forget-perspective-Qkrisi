@@ -1336,7 +1336,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		yield break;
     }
 
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (You can use spaces to separate characters if you want) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds!";
+    [HideInInspector]
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (You can use spaces to separate characters if you want) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds! Use '!{0} colorblind' to enable colorblind mode!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
