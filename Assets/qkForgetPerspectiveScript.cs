@@ -13,12 +13,14 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	public GameObject OrangeOBJ;
 	public GameObject WhiteOBJ;
 	public KMSelectable[] Buttons;
+	public KMColorblindMode colorblindMode;
+	public TextMesh[] faceColors;
 	public GameObject StageText;
 	public GameObject InputText;
 	public GameObject TimerText;
 	public KMBombInfo Bomb;
 	public KMAudio Audio;
-
+	public TextMesh[] Keyboards;
 	public List<string> AllStages;
 	public List<string> CurrentStage;
 	public List<int> indexes;
@@ -33,6 +35,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private bool solved = false;
 	private bool readytosolve = false;
     private bool activated = false;
+	private bool colorblind = false;
+	private bool displayingStage = true;
 	public List<string> AvailableColors;
 	public List<string> TempColors;
 	private float OriginalTime;
@@ -120,6 +124,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		Yellow=Faces[4].GetComponent<Renderer>().material;
 		White=WhiteOBJ.GetComponent<Renderer>().material;
 
+		colorblind = colorblindMode.ColorblindModeActive;
+		
 		Buttons[0].OnInteract += delegate(){
 			Buttons[0].AddInteractionPunch(.5f);
 			Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Buttons[0].transform);
@@ -276,6 +282,13 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			pressButton(letters[25]);
 			return false;
 		};
+		//Colorblind mode enable
+		Buttons[26].OnInteract += delegate(){
+			Buttons[26].AddInteractionPunch(.5f);
+			Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Buttons[26].transform);
+			enableColorblind();
+			return false;
+		};
 
         GetComponent<KMBombModule>().OnActivate += OnActivate;
 
@@ -348,13 +361,14 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		if(stageNumber>stages){
 				if(readytosolve){return;}
 				Debug.LogFormat("[Forget Perspective #{0}] ------Final------", moduleId);
-				Faces[0].GetComponent<Renderer>().material=White;
-				Faces[1].GetComponent<Renderer>().material=White;
-				Faces[2].GetComponent<Renderer>().material=White;
-				Faces[3].GetComponent<Renderer>().material=White;
-				Faces[4].GetComponent<Renderer>().material=White;
-				StageText.GetComponent<TextMesh>().text="INPUT";
+				for (int i=0; i < 5; i++) {
+				Faces[i].GetComponent<Renderer>().material=White;
+				faceColors[i].text = "";
+				}
+				displayingStage = false;
+				StageText.GetComponent<TextMesh>().text = currentInputNumber + "/" + stages;
 				TimerText.GetComponent<TextMesh>().text="";
+				InputText.GetComponent<TextMesh>().text="";
 				string ansstring = "";
 				foreach(string pt in Answer){
 					ansstring = ansstring + pt;
@@ -365,9 +379,10 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}
 		StageText.GetComponent<TextMesh>().text=stageNumber.ToString();
 		if(TimeModeActive || TwitchPlaysActive){
-		int zero = 0;
-		TimerText.GetComponent<TextMesh>().text=time.ToString();
-		if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}}
+		//int zero = 0;
+		TimerText.GetComponent<TextMesh>().text=time.ToString() + "′";
+		//if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}
+		}
 		Debug.LogFormat("[Forget Perspective #{0}] ------Stage {1} ------", moduleId,stageNumber.ToString());
 		TempColors=AvailableColors;
 		for(int i = 0;i<5;i++){
@@ -382,29 +397,34 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		CurrentStage.Add(time.ToString());
 		
 		for(int i = 0;i<5;i++){
-			Debug.LogFormat("[Forget Perspective #{0}] Face {1} is {2}.", moduleId, (i+1).ToString(), CurrentStage[i]);
 			switch(CurrentStage[i]){
 				case "Red":
 					Faces[i].GetComponent<Renderer>().material=Red;
+					if (colorblind == true) {faceColors[i].text = "R";} else {faceColors[i].text = "";};
 					break;
 				case "Orange":
 					Faces[i].GetComponent<Renderer>().material=Orange;
+					if (colorblind == true) {faceColors[i].text = "O";} else {faceColors[i].text = "";};
 					break;
 				case "Blue":
 					Faces[i].GetComponent<Renderer>().material=Blue;
+					if (colorblind == true) {faceColors[i].text = "B";} else {faceColors[i].text = "";};
 					break;
 				case "Green":
 					Faces[i].GetComponent<Renderer>().material=Green;
+					if (colorblind == true) {faceColors[i].text = "G";} else {faceColors[i].text = "";};
 					break;
 				case "Yellow":
 					Faces[i].GetComponent<Renderer>().material=Yellow;
+					if (colorblind == true) {faceColors[i].text = "Y";} else {faceColors[i].text = "";};
 					break;
 				case "Magenta":
 					Faces[i].GetComponent<Renderer>().material=Magenta;
+					if (colorblind == true) {faceColors[i].text = "M";} else {faceColors[i].text = "";};
 					break;
 			}
 		}
-		Debug.LogFormat("[Forget Perspective #{0}] Face 6 is {1}.", moduleId, CurrentStage[5]);
+		Debug.LogFormat("[Forget Perspective #{0}] The faces for Stage {1} are: {2}, {3}, {4}, {5}, {6}, {7}.", moduleId, stageNumber, CurrentStage[0], CurrentStage[1], CurrentStage[2], CurrentStage[3], CurrentStage[4], CurrentStage[5]);
 		indexes.Add(AllStages.Count);
 		foreach(string it in CurrentStage){
 			AllStages.Add(it);
@@ -413,11 +433,17 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		//if(autorotate){StartCoroutine(ProcessTwitchCommand("rotate"));}
 		}
 	}
-
-
-
-
-
+	void enableColorblind() {
+		if (readytosolve == true && displayingStage == true) {
+			colorblind = true;
+			Display(currentInputNumber);			
+		}
+		else if (displayingStage == true) {
+		colorblind = true;
+		Display(stageNumber);
+		}
+		else {colorblind = true;};
+	}
 	void Calculate(){
 		//Debug.LogFormat("Started calculating: {0}", CurrentStage.Count.ToString());
 		int currtime = int.Parse(CurrentStage[6]);
@@ -462,7 +488,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				}
 			}
 		}
-		Debug.LogFormat("[Forget Perspective #{0}] Starting rule {1} applied.", moduleId, starting);
 		//Debug.LogFormat("Starting position calculated");
 
 		switch(lowlist[starting-1]){
@@ -485,7 +510,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				net=6;
 				break;
 		}
-		Debug.LogFormat("[Forget Perspective #{0}] Net rule {1} applied.", moduleId, net);
+		Debug.LogFormat("[Forget Perspective #{0}] Applied starting rule {1} and net rule {2}.", moduleId, starting, net);
 		//Debug.LogFormat("Net calculated: {0}", net);
 
 		switch(net){
@@ -814,11 +839,9 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			Debug.LogFormat("[Forget Perspective #{0}] Order made:{1}", moduleId, ordertostring);
 			//Debug.LogFormat("List length: {0}", finalorder.Count.ToString());
 		x=letters.FindIndex(ind=>ind.Equals(Bomb.GetSerialNumberLetters().Last().ToString().ToUpper()))+1;
-		Debug.LogFormat("[Forget Perspective #{0}] X = {1}", moduleId, x.ToString());
 		y=Bomb.GetSerialNumberNumbers().Sum();
-		Debug.LogFormat("[Forget Perspective #{0}] Y = {1}", moduleId, y.ToString());
 		int rule = (Bomb.GetBatteryCount()*Bomb.GetPortCount())%10;
-		Debug.LogFormat("[Forget Perspective #{0}] Character Shift rule = {1}", moduleId, rule.ToString());
+		Debug.LogFormat("[Forget Perspective #{0}] Character Shift rule = {1}, X = {2}, Y = {3}", moduleId, rule, x, y);
 		//foreach(string i in finalorder){
 			for(int i=0;i<finalorder.Count;i++){
 			//int basenum = letters.FindIndex(ind=>ind.Equals(i))+1;
@@ -875,7 +898,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			while(!(final>0 && final<27)){
 			if(final<1){final=26-(final*-1);}
 			if(final>26){final=final-26;}}
-			Debug.LogFormat("[Forget Perspective #{0}] Shifted: {1} => {2}", moduleId, finalorder[i], letters[final-1]);
 			//lowlist[lowlist.FindIndex(ind=>ind.Equals("Red"))] =  "R";
 			//finalorder[finalorder.FindIndex(ind=>ind.Equals(i))]=letters[final-1];
 			finalorder[i]=letters[final-1];
@@ -988,32 +1010,39 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 
 	void Display(int stage){
+		displayingStage = true;
 		for(int i = 0; i<5; i++){
 			switch(AllStages[indexes[(stage-1)]+i]){
 				case "Red":
 					Faces[i].GetComponent<Renderer>().material=Red;
+					if (colorblind == true) {faceColors[i].text = "R";} else {faceColors[i].text = "";};
 					break;
 				case "Orange":
 					Faces[i].GetComponent<Renderer>().material=Orange;
+					if (colorblind == true) {faceColors[i].text = "O";} else {faceColors[i].text = "";};
 					break;
 				case "Blue":
 					Faces[i].GetComponent<Renderer>().material=Blue;
+					if (colorblind == true) {faceColors[i].text = "B";} else {faceColors[i].text = "";};
 					break;
 				case "Green":
 					Faces[i].GetComponent<Renderer>().material=Green;
+					if (colorblind == true) {faceColors[i].text = "G";} else {faceColors[i].text = "";};
 					break;
 				case "Yellow":
 					Faces[i].GetComponent<Renderer>().material=Yellow;
+					if (colorblind == true) {faceColors[i].text = "Y";} else {faceColors[i].text = "";};
 					break;
 				case "Magenta":
 					Faces[i].GetComponent<Renderer>().material=Magenta;
+					if (colorblind == true) {faceColors[i].text = "M";} else {faceColors[i].text = "";};
 					break;
 			}
 		}
 		StageText.GetComponent<TextMesh>().text=stage.ToString();
-		int zero = 0;
-		TimerText.GetComponent<TextMesh>().text=AllStages[indexes[(stage-1)]+6];
-		if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}
+		//int zero = 0;
+		TimerText.GetComponent<TextMesh>().text= AllStages[indexes[(stage-1)]+6] + "′";
+		//if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}
 	}
 
 
@@ -1022,26 +1051,52 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		if(readytosolve){
 			if(!solved){
 			if(Answer[currentInputNumber-1]==letter){
-				if(InputText.GetComponent<TextMesh>().text.Length==8){/**InputText.GetComponent<TextMesh>().text="";*/ InputText.GetComponent<TextMesh>().text = InputText.GetComponent<TextMesh>().text.Substring(1); }
+				if(InputText.GetComponent<TextMesh>().text.Length==1){/**InputText.GetComponent<TextMesh>().text="";*/ InputText.GetComponent<TextMesh>().text = InputText.GetComponent<TextMesh>().text.Substring(1); }
 				InputText.GetComponent<TextMesh>().text=InputText.GetComponent<TextMesh>().text+letter;
 				Debug.LogFormat("[Forget Perspective #{0}] Which was correct!", moduleId);
 				currentInputNumber++;
-                Faces[0].GetComponent<Renderer>().material = White;
-                Faces[1].GetComponent<Renderer>().material = White;
-                Faces[2].GetComponent<Renderer>().material = White;
-                Faces[3].GetComponent<Renderer>().material = White;
-                Faces[4].GetComponent<Renderer>().material = White;
+				for (int i=0; i < 5; i++) {
+					Faces[i].GetComponent<Renderer>().material=White;
+					faceColors[i].text = "";
+				}
+				displayingStage = false;
                 TimerText.GetComponent<TextMesh>().text = "";
                 if (currentInputNumber>stages){
 					solved=true;
 					StageText.GetComponent<TextMesh>().text="GG :D";
-					InputText.GetComponent<TextMesh>().text="Module solved!";
+					Keyboards[16].text = "";
+					Keyboards[22].text = "M";
+					Keyboards[4].text = "O";
+					Keyboards[17].text = "D";
+					Keyboards[19].text = "U";
+					Keyboards[24].text = "L";
+					Keyboards[20].text = "E";
+					Keyboards[8].text = "";
+					Keyboards[14].text = "";
+					Keyboards[15].text = "";
+					Keyboards[0].text = "";
+					Keyboards[18].text = "";
+					Keyboards[3].text = "S";
+					Keyboards[5].text = "O";
+					Keyboards[6].text = "L";
+					Keyboards[7].text = "V";
+					Keyboards[9].text = "E";
+					Keyboards[10].text = "D";
+					Keyboards[11].text = "!";
+					Keyboards[25].text = "";
+					Keyboards[23].text = "";
+					Keyboards[2].text = "";
+					Keyboards[21].text = "";
+					Keyboards[1].text = "";
+					Keyboards[13].text = "";
+					Keyboards[12].text = "";
+					InputText.GetComponent<TextMesh>().text = "✔";
 					Debug.LogFormat("[Forget Perspective #{0}] Module solved!", moduleId);
 					GetComponent<KMBombModule>().HandlePass();
                 }
                 else
                 {
-                    StageText.GetComponent<TextMesh>().text = "INPUT";
+                    StageText.GetComponent<TextMesh>().text = currentInputNumber + "/" + stages;
                 }
 		}
 		else{
@@ -1066,11 +1121,11 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 			else{
 				//StopCoroutine(Countdown());
-				Faces[0].GetComponent<Renderer>().material=White;
-				Faces[1].GetComponent<Renderer>().material=White;
-				Faces[2].GetComponent<Renderer>().material=White;
-				Faces[3].GetComponent<Renderer>().material=White;
-				Faces[4].GetComponent<Renderer>().material=White;
+			for (int i=0; i < 5; i++) {
+				Faces[i].GetComponent<Renderer>().material=White;
+				faceColors[i].text = "";
+			}
+				displayingStage = false;
 				StageText.GetComponent<TextMesh>().text="Input";
 				readytosolve=true;
 			}
@@ -1080,14 +1135,14 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			//StopCoroutine(Countdown());
 			solved=true;
 			readytosolve=true;
-			Faces[0].GetComponent<Renderer>().material=White;
-			Faces[1].GetComponent<Renderer>().material=White;
-			Faces[2].GetComponent<Renderer>().material=White;
-			Faces[3].GetComponent<Renderer>().material=White;
-			Faces[4].GetComponent<Renderer>().material=White;
+			for (int i=0; i < 5; i++) {
+			Faces[i].GetComponent<Renderer>().material=White;
+			faceColors[i].text = "";
+			}
+			displayingStage = false;
 			TimerText.GetComponent<TextMesh>().text="";
 			StageText.GetComponent<TextMesh>().text="GG :D";
-			InputText.GetComponent<TextMesh>().text="Module solved!";
+			InputText.GetComponent<TextMesh>().text="✔";
 			GetComponent<KMBombModule>().HandlePass();
 		}
 	}
@@ -1147,14 +1202,14 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			//Debug.LogFormat("Got to solve");
 			solved=true;
 			readytosolve=true;
-			Faces[0].GetComponent<Renderer>().material=White;
-			Faces[1].GetComponent<Renderer>().material=White;
-			Faces[2].GetComponent<Renderer>().material=White;
-			Faces[3].GetComponent<Renderer>().material=White;
-			Faces[4].GetComponent<Renderer>().material=White;
+			for (int i=0; i < 5; i++) {
+			Faces[i].GetComponent<Renderer>().material=White;
+			faceColors[i].text = "";
+			}
+			displayingStage = false;
 			TimerText.GetComponent<TextMesh>().text="";
 			StageText.GetComponent<TextMesh>().text="GG :D";
-			InputText.GetComponent<TextMesh>().text="Module solved!";
+			InputText.GetComponent<TextMesh>().text="✔";
 			StartCoroutine(AutoSolve());
 			//GetComponent<KMBombModule>().HandlePass();
 		}
@@ -1166,7 +1221,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
         activated = true;
     }
 
-	 void Update (){
+	void Update (){
 		 if(solved || !activated){return;}
 		ticker++;
 		if(ticker == 5)
@@ -1295,6 +1350,11 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
             yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
 			yield break;
 		}
+		if(command.Equals("colorblind", StringComparison.InvariantCultureIgnoreCase)){
+			yield return null;
+			Buttons[26].OnInteract();
+			yield break;
+		}
 		string commandl=command.ToUpper();
 		if(commandl.Contains("SETSPEED ")){
 			commandl=commandl.Replace("SETSPEED ", "");
@@ -1359,6 +1419,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 				}
 			}
 			}
+			yield return "sendtochaterror Invalid command.";
 			yield break;
 	}
 
