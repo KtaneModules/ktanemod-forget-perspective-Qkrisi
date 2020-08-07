@@ -307,15 +307,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.0044216025
       objectReference: {fileID: 0}
     - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9999903
       objectReference: {fileID: 0}
     - target: {fileID: 4100218999961708, guid: 9f4c6d7187b6e494a8869db11cac6bb0, type: 2}
       propertyPath: m_RootOrder
@@ -362,6 +362,11 @@ Prefab:
     - target: {fileID: 439642, guid: 8814ea52310d2614a9feda02ec355ae4, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114848120511536268, guid: 8814ea52310d2614a9feda02ec355ae4,
+        type: 2}
+      propertyPath: TwitchPlaysActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8814ea52310d2614a9feda02ec355ae4, type: 2}

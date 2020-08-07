@@ -56,13 +56,13 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private int x;
 	private int y;
 
-	private Material Orange;
-	private Material Yellow;
-	private Material Blue;
-	private Material Green;
-	private Material Red;
-	private Material Magenta;
-	private Material White;
+	public Material Orange;
+	public Material Yellow;
+	public Material Blue;
+	public Material Green;
+	public Material Red;
+	public Material Magenta;
+	public Material White;
 
 	private float rotationTime = 5;
 
@@ -115,14 +115,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		letters.Add("X");
 		letters.Add("Y");
 		letters.Add("Z");
-
-		Orange=OrangeOBJ.GetComponent<Renderer>().material;
-		Red=Faces[0].GetComponent<Renderer>().material;
-		Magenta=Faces[1].GetComponent<Renderer>().material;
-		Blue=Faces[2].GetComponent<Renderer>().material;
-		Green=Faces[3].GetComponent<Renderer>().material;
-		Yellow=Faces[4].GetComponent<Renderer>().material;
-		White=WhiteOBJ.GetComponent<Renderer>().material;
 
 		colorblind = colorblindMode.ColorblindModeActive;
 		
@@ -361,7 +353,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		if(stageNumber>stages){
 				if(readytosolve){return;}
 				Debug.LogFormat("[Forget Perspective #{0}] ------Final------", moduleId);
-				for (int i=0; i < 5; i++) {
+				for (int i=0; i < 6; i++) {
 				Faces[i].GetComponent<Renderer>().material=White;
 				faceColors[i].text = "";
 				}
@@ -396,7 +388,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		CurrentStage.Add(TempColors[0]);
 		CurrentStage.Add(time.ToString());
 		
-		for(int i = 0;i<5;i++){
+		for(int i = 0;i<6;i++){
 			switch(CurrentStage[i]){
 				case "Red":
 					Faces[i].GetComponent<Renderer>().material=Red;
@@ -430,6 +422,9 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			AllStages.Add(it);
 		}
 		Calculate();
+		if (autorotate) {
+			StartCoroutine(RotateModule(rotationTime));
+		}
 		//if(autorotate){StartCoroutine(ProcessTwitchCommand("rotate"));}
 		}
 	}
@@ -1011,7 +1006,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 	void Display(int stage){
 		displayingStage = true;
-		for(int i = 0; i<5; i++){
+		for(int i = 0; i < 6; i++){
 			switch(AllStages[indexes[(stage-1)]+i]){
 				case "Red":
 					Faces[i].GetComponent<Renderer>().material=Red;
@@ -1121,7 +1116,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			}
 			else{
 				//StopCoroutine(Countdown());
-			for (int i=0; i < 5; i++) {
+			for (int i=0; i < 6; i++) {
 				Faces[i].GetComponent<Renderer>().material=White;
 				faceColors[i].text = "";
 			}
@@ -1135,7 +1130,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			//StopCoroutine(Countdown());
 			solved=true;
 			readytosolve=true;
-			for (int i=0; i < 5; i++) {
+			for (int i=0; i < 6; i++) {
 			Faces[i].GetComponent<Renderer>().material=White;
 			faceColors[i].text = "";
 			}
@@ -1202,7 +1197,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			//Debug.LogFormat("Got to solve");
 			solved=true;
 			readytosolve=true;
-			for (int i=0; i < 5; i++) {
+			for (int i=0; i < 6; i++) {
 			Faces[i].GetComponent<Renderer>().material=White;
 			faceColors[i].text = "";
 			}
@@ -1256,18 +1251,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 	IEnumerator RotateModule(float duration)
     {
-			int angle = 20;
-			//Module.transform.localEulerAngles = new Vector3(0, 0, 0);
-			for (float i = 0; i < angle; i += getRotateRate(2.5f, 300))
-            {	
-				if(Module.transform.localEulerAngles.z==0){
-                Module.transform.localEulerAngles = new Vector3((30 - i), Module.transform.localEulerAngles.y, Module.transform.localEulerAngles.z);}
-				else{
-					Module.transform.localEulerAngles = new Vector3(-(30 - i), Module.transform.localEulerAngles.y, Module.transform.localEulerAngles.z);
-				}
-                yield return null;
-            }
-
 			
 
 			/*float startRotation = Module.transform.localEulerAngles.x;
@@ -1283,15 +1266,40 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			Module.transform.localEulerAngles = new Vector3(45, 0, 0);*/
 
 			//duration=6;
-			yield return new WaitForSeconds(0.5f);
-			float startRotation = Cube.transform.localEulerAngles.y;
-        	float endRotation = startRotation + 360.0f;
+			yield return null;
+			float i = 0.0f;
+			float startRotationx = 360;
+        	float endRotation = 270;
+        	while (i < duration/5)
+        	{
+            	i += Time.deltaTime;
+            	float xRotation = Mathf.Lerp(startRotationx, endRotation, i /(duration/5)) % 360.0f;
+            	Cube.transform.localEulerAngles = new Vector3(xRotation, 180, 0);
+            	yield return null;
+        	}
+			//x 0>-90 y180 z=0; start turning: z=90 xturn; x=0 y 180 z = 0
+
+			Cube.transform.localEulerAngles = new Vector3(270, 270, 270);
+			startRotationx = Cube.transform.localEulerAngles.x;
+        	endRotation = startRotationx + 360.0f;
         	float t = 0.0f;
         	while ( t  < duration )
         	{
             	t += Time.deltaTime;
-            	float yRotation = Mathf.Lerp(startRotation, endRotation, t / duration) % 360.0f;
-            	Cube.transform.localEulerAngles = new Vector3(Cube.transform.localEulerAngles.x, yRotation, Cube.transform.localEulerAngles.z);
+            	float xRotation = Mathf.Lerp(startRotationx, endRotation, t / duration) % 360.0f;
+            	Cube.transform.localEulerAngles = new Vector3(xRotation, 270, 270);
+            	yield return null;
+        	}
+
+			Cube.transform.localEulerAngles = new Vector3(270, 180, 0);
+			startRotationx = Cube.transform.localEulerAngles.x;
+        	endRotation = 360f;
+        	float a = 0.0f;
+        	while ( a  < duration/5 )
+        	{
+            	a += Time.deltaTime;
+            	float xRotation = Mathf.Lerp(startRotationx, endRotation, a / (duration/5)) % 360.0f;
+            	Cube.transform.localEulerAngles = new Vector3(xRotation, 180, 0);
             	yield return null;
         	}
 			Cube.transform.localEulerAngles = new Vector3(0, 180, 0);
@@ -1321,34 +1329,27 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
             }*/
 
 
-			angle = 20;
-			//Module.transform.localEulerAngles = new Vector3(0, 0, 0);
-			for (float i = 0; i < angle; i += getRotateRate(2.5f, 300))
-            {	
-				if(Module.transform.localEulerAngles.z==0){
-                Module.transform.localEulerAngles = new Vector3(-(30 - i), Module.transform.localEulerAngles.y, Module.transform.localEulerAngles.z);}
-				else{
-					Module.transform.localEulerAngles = new Vector3((30 - i), Module.transform.localEulerAngles.y, Module.transform.localEulerAngles.z);
-				}
-                yield return null;
-            }
-			Module.transform.localEulerAngles=new Vector3(0, 0, Module.transform.localEulerAngles.z);
-		yield break;
+			yield break;
     }
 
     [HideInInspector]
-	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! (You can use spaces to separate characters if you want) Use '!{0} rotate' to rotate the cube! Use '!{0} setspeed #' to set the speed of rotation in seconds! Use '!{0} colorblind' to enable colorblind mode!";
+	public string TwitchHelpMessage = "Use '!{0} submit <input>' to submit an answer! Use '!{0} rotate' to rotate the cube! Use '!{0} autorotate to toggle autorotate! Use '!{0} setspeed #' to set the speed of rotation in seconds! Use '!{0} colorblind' to enable colorblind mode!";
     IEnumerator ProcessTwitchCommand(string command){
 		yield return null;
 		if(command.Equals("rotate", StringComparison.InvariantCultureIgnoreCase)){
-			if(Module.transform.localEulerAngles.z==0){yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(75,0,0)};}
-			else{
-			    yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(-75,0,0)};
-			}
-            while (Module.transform.localEulerAngles != new Vector3(0, 0, Module.transform.localEulerAngles.z)) { yield return "trycancel"; }
             StartCoroutine(RotateModule(rotationTime));
-            while (Module.transform.localEulerAngles != new Vector3(0, 0, Module.transform.localEulerAngles.z)) { yield return "trycancel"; }
-            yield return new Quaternion[] {((Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0)) * (Quaternion.Euler(0,0,0))), Quaternion.Euler(0,0,0)};
+			yield break;
+		}
+		if(command.Equals("autorotate", StringComparison.InvariantCultureIgnoreCase)){
+			yield return null;
+			if (!autorotate) {
+				autorotate = true;
+				yield return "sendtochat Autorotation is enabled.";
+			}
+			else {
+				autorotate = false;
+				yield return "sendtochat Autorotation is disbled.";
+			}
 			yield break;
 		}
 		if(command.Equals("colorblind", StringComparison.InvariantCultureIgnoreCase)){
