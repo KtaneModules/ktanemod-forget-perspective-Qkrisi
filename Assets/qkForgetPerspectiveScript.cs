@@ -55,6 +55,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	private bool autorotate = false;
 	private int x;
 	private int y;
+	float delayer = 0f;
 
 	public Material Orange;
 	public Material Yellow;
@@ -1217,6 +1218,9 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
     }
 
 	void Update (){
+        if (delayer > 0)
+            delayer -= Time.deltaTime;
+
 		 if(solved || !activated){return;}
 		ticker++;
 		if(ticker == 5)
@@ -1238,8 +1242,9 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
             foreach (String d in newSolves) { solvedModules.Add(d); lastCalcStage++; }
         }
-		if(lastCalcStage >= stageNumber)
+		if(delayer <= 0 && lastCalcStage >= stageNumber)
 		{
+			delayer = rotationTime*1.5f;
 			Reset();
 		}
 	 }
@@ -1362,12 +1367,12 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			commandl=commandl.Replace("SETSPEED ", "");
 			float temprot;
 			if(float.TryParse(commandl, out temprot)){
-				rotationTime=temprot;
                 if(rotationTime > 10f)
                 {
                     yield return "sendtochaterror The rotation time may not be set higher than 10 seconds!";
                     yield break;
                 }
+					rotationTime=temprot;
 				/**if(rotationTime==69f){
 					yield return "sendtochat Rotation set to 69 seconds! Kappa";
 				}
