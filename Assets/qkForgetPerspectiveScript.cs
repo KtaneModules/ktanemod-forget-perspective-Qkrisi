@@ -37,6 +37,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
     private bool activated = false;
 	private bool colorblind = false;
 	private bool displayingStage = true;
+	private bool struck = false;
 	public List<string> AvailableColors;
 	public List<string> TempColors;
 	private float OriginalTime;
@@ -1037,7 +1038,8 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}
 		StageText.GetComponent<TextMesh>().text=stage.ToString();
 		//int zero = 0;
-		TimerText.GetComponent<TextMesh>().text= AllStages[indexes[(stage-1)]+6] + "′";
+		if (TimeModeActive || TwitchPlaysActive || struck) TimerText.GetComponent<TextMesh>().text= AllStages[indexes[(stage-1)]+6] + "′";
+		struck = false;
 		//if(int.Parse(TimerText.GetComponent<TextMesh>().text)/10<1){TimerText.GetComponent<TextMesh>().text = zero.ToString() + TimerText.GetComponent<TextMesh>().text;}
 	}
 
@@ -1097,6 +1099,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}
 		else{
 			Debug.LogFormat("[Forget Perspective #{0}] Which wasn't correct. Strike!", moduleId);
+			struck = true;
 			Display(currentInputNumber);
 			GetComponent<KMBombModule>().HandleStrike();
 				}
