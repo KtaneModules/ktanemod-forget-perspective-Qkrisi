@@ -37,7 +37,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
     private bool activated = false;
 	private bool colorblind = false;
 	private bool displayingStage = true;
-	private bool struck = false;
 	public List<string> AvailableColors;
 	public List<string> TempColors;
 	private float OriginalTime;
@@ -1006,7 +1005,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	}
 
 
-	void Display(int stage){
+	void Display(int stage, bool stuck = false){
 		displayingStage = true;
 		for(int i = 0; i < 6; i++){
 			switch(AllStages[indexes[(stage-1)]+i]){
@@ -1099,8 +1098,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 		}
 		else{
 			Debug.LogFormat("[Forget Perspective #{0}] Which wasn't correct. Strike!", moduleId);
-			struck = true;
-			Display(currentInputNumber);
+			Display(currentInputNumber, true);
 			GetComponent<KMBombModule>().HandleStrike();
 				}
 			}
