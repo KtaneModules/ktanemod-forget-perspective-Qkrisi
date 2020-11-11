@@ -1005,7 +1005,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 	}
 
 
-	void Display(int stage, bool stuck = false){
+	void Display(int stage, bool struck = false){
 		displayingStage = true;
 		for(int i = 0; i < 6; i++){
 			switch(AllStages[indexes[(stage-1)]+i]){
@@ -1216,7 +1216,10 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
     {
         CheckAutoSolve();
         activated = true;
+		if(!EnableDelay) Reset();
     }
+
+	private const bool EnableDelay = false;
 
 	void Update (){
         if (delayer > 0)
@@ -1224,7 +1227,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 		 if(solved || !activated){return;}
 		ticker++;
-		if(ticker == 5)
+		if(!EnableDelay || ticker == 5)
 		{
 			ticker = 0;
 
@@ -1243,7 +1246,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
             foreach (String d in newSolves) { solvedModules.Add(d); lastCalcStage++; }
         }
-		if(delayer <= 0 && lastCalcStage >= stageNumber)
+		if((!EnableDelay || delayer <= 0) && lastCalcStage >= stageNumber)
 		{
 			delayer = rotationTime*1.5f;
 			Reset();
