@@ -1371,7 +1371,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 			commandl=commandl.Replace("SETSPEED ", "");
 			float temprot;
 			if(float.TryParse(commandl, out temprot)){
-                if(rotationTime > 10f)
+                if(temprot > 10f)
                 {
                     yield return "sendtochaterror The rotation time may not be set higher than 10 seconds!";
                     yield break;
