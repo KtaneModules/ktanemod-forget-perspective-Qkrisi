@@ -1227,6 +1227,7 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
 
 		 if(solved || !activated){return;}
 		ticker++;
+		int ct = 0;
 		if(!EnableDelay || ticker == 5)
 		{
 			ticker = 0;
@@ -1244,12 +1245,13 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
             if (newSolves.Count() == 0)
                 return;
 
-            foreach (String d in newSolves) { solvedModules.Add(d); lastCalcStage++; }
+            foreach (String d in newSolves) { solvedModules.Add(d); lastCalcStage++; ct++; }
         }
 		if((!EnableDelay || delayer <= 0) && lastCalcStage >= stageNumber)
 		{
 			delayer = rotationTime*1.5f;
-			Reset();
+			for (int i = 0; i < ct; i++)
+				Reset();
 		}
 	 }
 
@@ -1312,7 +1314,6 @@ public class qkForgetPerspectiveScript : MonoBehaviour {
             	yield return null;
         	}
 			Cube.transform.localEulerAngles = new Vector3(0, 180, 0);
-
 
 			/*duration=2;
 			startRotation = Module.transform.localEulerAngles.x;
